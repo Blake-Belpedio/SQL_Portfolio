@@ -1,0 +1,70 @@
+--Create Tables
+
+Create Table Supplier(
+  Supplier_Id INT unsigned auto_increment Primary Key,
+  Company_Name VARCHAR(50),
+  COUNTRY VARCHAR(30),
+  Sales_Contact_Name VARCHAR(60),
+  Email VARCHAR(50) NOT NUll);
+
+  Create Table Coffee_Shop (
+    Shop_Id INT Unsigned auto_increment Primary Key,
+    Shop_Name VARCHAR(50),
+    City VARCHAR(50),
+    State CHAR(2));
+
+  Create Table Coffee (
+    Coffee_Id INT Auto_Increment Primary Key,
+    Shop_Id INT unsigned,
+    Supplier_Id INT unsigned,
+    Coffee_Name VarChar(30),
+    Price_Per_Pound Numeric(5,2),
+    Foreign Key (Shop_Id) References Coffee_Shop(Shop_Id),
+    Foreign Key (Supplier_Id) References Supplier(Supplier_Id));
+
+Create Table Employee (
+   Employee_Id INT Auto_Increment Primary KEY,
+   First_Name VarChar(30),
+   Last_Name VarChar(30),
+   Hire_Date Date,
+   Job_title VarChar(30),
+   Shop_Id INT Unsigned,
+   Foreign Key (Shop_Id) References Coffee_Shop(Shop_Id));
+--Insert Data
+Insert Into Supplier (Company_Name,Country,Sales_Contact_Name,Email)
+  Values('Caffeine Brokers', 'Canada', 'Linda A. Smith', 'L.Smith@LookAMoose.com'),
+  ('Lipton', 'United States','Tea Money','T.Bag$@lipton.corp'),
+  ('Fresh Bread INC.','United States', 'Blake Belpedio','bbelped@yeast.com');
+
+  Insert Into Coffee_Shop (Shop_Name,City,State)
+  Values( 'KenopochaMocha','North Manchester','IN'),
+  ('Daily Grindz','Los Angeles','CA'),
+  ('Doctor Brew','Tardis','GA');
+
+  Insert into Coffee (Shop_Id,Supplier_Id,Coffee_Name,Price_Per_Pound)
+  Values (1,2,'Green Machine',13.00),
+  (3,1,'The Ood Brew',20.00),
+  (1,1,'Lotsa Matcha', 7.50);
+
+  Insert into Employee (First_Name,Last_Name, Hire_Date,Job_Title,Shop_Id)
+  Values ( 'Amelia','Pond','2013-05-08','Barista',3),
+  ('John','Doe','1900-01-01','Manager',1),
+  ('DaVana','Tendi','2022-09-11','Cleaner',2);
+--Create View
+Create View Employee_View
+As Select Concat(First_Name,' ',Last_Name) as Employee_full_Name, Hire_Date, Job_Title,Shop_Id
+From Employee;
+-- Create Index
+Create Index Coffee
+On Coffee (Coffee_Name);
+
+--SFW Query
+Select Coffee_Name, Price_Per_Pound as Price
+From Coffee
+Where Price_Per_Pound > '10';
+
+-- Join Query
+Select Coffee.Coffee_Name,Supplier.Company_Name,Shop_Name
+From Coffee
+ Left Join Supplier on Coffee.Supplier_Id = Supplier.Supplier_Id
+ Left Join Coffee_Shop on Coffee.Shop_Id = Coffee_Shop.Shop_Id;
